@@ -71,6 +71,15 @@ def Check_citycode(E):
     con.close()
     return data
 
+def Check_npet(E):
+    con = sqlite3.connect("member.db")
+    cursor = con.cursor()
+    cursor.execute("SELECT PN FROM member WHERE Email=?",(E, ))
+    data = cursor.fetchall()
+    con.commit()
+    con.close()
+    return data
+    
 #Email : E, Password: P로 회원가입 할 경우 디비에 이를 저장
 def Save_mem(E, P):
     con = sqlite3.connect("member.db")

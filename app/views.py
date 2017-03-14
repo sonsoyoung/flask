@@ -193,39 +193,32 @@ def enrollment_home_complete():
 @app.route('/enrollment_pet/pet', methods=['GET', 'POST'])
 def enrollment_pet_pet():
     # Check session
-	if not 'email' in session:
-		return redirect('/')
+    if not 'email' in session:
+        return redirect('/')
 
-	# User = session['email']
-    # citycode = function.Check_citycode(User)
-	# if citycode[0][0] != '0':
-    #     return "already enroll home!"
+    User = session['email']
+    npet = function.Check_npet(User)
+    if npet[0][0] != '0':
+        return "already enroll pet!"
 
-
-	if request.method == 'POST':
-		print(request.form)
-
-		# ImmutableMultiDict([('petName', 'mong'),
+    if request.method == 'POST':
+        print(request.form)
+		#  ImmutableMultiDict([('petName', 'mong'),
 		# 					('petGender', 'male'),
 		# 					('pet[birthday_month]', '1'),
 		# 					('pet[birthday_day]', '10'),
 		# 					('pet[birthday_year]', '2016')])
 
-		User = session['email']
+        petname = request.form.get("petName")
+        petgender = request.form.get("petGender")
+        month = request.form.get("pet[birthday_month]")
+        day = request.form.get("pet[birthday_day]")
+        year = request.form.get("pet[birthday_year]")
+        petbirth = year+"-"+month+"-"+day
+        function.Save_pet_pet(User, petname, petgender,petbirth)
+        return redirect('/enrollment_pet/size')
 
-		petname = request.form.get("petName")
-		petgender = request.form.get("petGender")
-		month = request.form.get("pet[birthday_month]")
-		day = request.form.get("pet[birthday_day]")
-		year = request.form.get("pet[birthday_year]")
-		petbirth = year+"-"+month+"-"+day
-		function.Save_pet_pet(User, petname, petgender,petbirth)
-
-		return redirect('/enrollment_pet/size')
-
-	return render_template("pet.html",
-                        title='pet',
-						session='OK')
+    return render_template("pet.html", title='pet', session='OK')
 
 @app.route('/enrollment_pet/size', methods=['GET', 'POST'])
 def enrollment_pet_size():
